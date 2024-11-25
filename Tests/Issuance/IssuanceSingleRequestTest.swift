@@ -117,7 +117,7 @@ class IssuanceSingleRequestTest: XCTestCase {
       let authorizedRequest = await issuer.requestAccessToken(authorizationCode: authorizationCode)
       
       if case let .success(authorized) = authorizedRequest,
-         case let .noProofRequired(token, _, _) = authorized {
+         case let .noProofRequired(token, _, _, _) = authorized {
         XCTAssert(true, "Got access token: \(token)")
         XCTAssert(true, "Is no proof required")
         
@@ -152,7 +152,7 @@ class IssuanceSingleRequestTest: XCTestCase {
                 switch result {
                 case .deferred:
                   XCTAssert(false, "Unexpected deferred")
-                case .issued(_, let credential, _):
+                case .issued(let credential, _):
                   XCTAssert(true, "credential: \(credential)")
                   return
                 }
@@ -246,11 +246,12 @@ class IssuanceSingleRequestTest: XCTestCase {
       credentialOffer: offer,
       authorizationCode: issuanceAuthorization,
       clientId: "218232426",
-      transactionCode: "12345"
+      transactionCode: "12345",
+      clientAssertion: nil
     )
     
     if case let .success(authorized) = unAuthorized,
-       case let .noProofRequired(token, _, _) = authorized {
+       case let .noProofRequired(token, _, _, _) = authorized {
       XCTAssert(true, "Got access token: \(token)")
       XCTAssert(true, "Is no proof required")
       
@@ -285,7 +286,7 @@ class IssuanceSingleRequestTest: XCTestCase {
               switch result {
               case .deferred:
                 XCTAssert(false, "Unexpected deferred")
-              case .issued(_, let credential, _):
+              case .issued(let credential, _):
                 XCTAssert(true, "credential: \(credential)")
                 return
               }
@@ -378,7 +379,7 @@ class IssuanceSingleRequestTest: XCTestCase {
       let authorizedRequest = await issuer.requestAccessToken(authorizationCode: authorizationCode)
       
       if case let .success(authorized) = authorizedRequest,
-         case let .noProofRequired(token, _, identifiers) = authorized {
+         case let .noProofRequired(token, _, identifiers, _) = authorized {
         XCTAssert(true, "Got access token: \(token)")
         XCTAssert(true, "Is no proof required")
         
@@ -413,7 +414,7 @@ class IssuanceSingleRequestTest: XCTestCase {
                 switch result {
                 case .deferred:
                   XCTAssert(false, "Unexpected deferred")
-                case .issued(_, let credential, _):
+                case .issued(let credential, _):
                   XCTAssert(true, "credential: \(credential)")
                   return
                 }

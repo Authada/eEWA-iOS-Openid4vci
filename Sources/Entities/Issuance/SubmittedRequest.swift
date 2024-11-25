@@ -36,7 +36,7 @@ public struct CredentialIssuanceResponse: Codable {
   
   public enum Result: Codable {
     case deferred(transactionId: TransactionId)
-    case issued(format: String?, credential: String, notificationId: NotificationId?)
+    case issued(credential: String, notificationId: NotificationId?)
   }
   
   public init(credentialResponses: [Result], cNonce: CNonce?) {
@@ -55,7 +55,7 @@ public enum SubmittedRequest {
     case .success(let response):
       response.credentialResponses.compactMap { result in
         switch result {
-        case .issued(_, let credential, _):
+        case .issued(let credential, _):
           credential
         default:
           nil

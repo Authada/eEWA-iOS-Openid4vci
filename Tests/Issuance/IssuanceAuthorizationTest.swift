@@ -160,7 +160,7 @@ class IssuanceAuthorizationTest: XCTestCase {
       let authorizedRequest = await issuer.requestAccessToken(authorizationCode: authorizationCode)
       
       if case let .success(authorized) = authorizedRequest,
-         case let .noProofRequired(token, _, _) = authorized {
+         case let .noProofRequired(token, _, _, _) = authorized {
         XCTAssert(true, "Got access token: \(token)")
         return
       }
@@ -212,7 +212,7 @@ class IssuanceAuthorizationTest: XCTestCase {
     case .success(let authorizationCode):
       let authorizedRequest = await issuer.requestAccessToken(authorizationCode: authorizationCode)
       if case let .success(authorized) = authorizedRequest,
-         case let .proofRequired(token, _, _, _) = authorized {
+         case let .proofRequired(token, _, _, _, _) = authorized {
         XCTAssert(true, "Got access token: \(token)")
         return
       }
@@ -321,12 +321,13 @@ class IssuanceAuthorizationTest: XCTestCase {
         txCode: code.txCode
       ),
       clientId: "218232426",
-      transactionCode: "123456"
+      transactionCode: "123456",
+      clientAssertion: nil
     )
     
     switch result {
     case .success(let request):
-      if case let .noProofRequired(token, _, _) = request {
+      if case let .noProofRequired(token, _, _, _) = request {
         XCTAssert(true, "Got access token: \(token)")
       }
     case .failure(let error):
@@ -380,7 +381,8 @@ class IssuanceAuthorizationTest: XCTestCase {
         txCode: code.txCode
       ),
       clientId: "218232426",
-      transactionCode: "12345"
+      transactionCode: "12345",
+      clientAssertion: nil
     )
     
     let privateKey = try KeyController.generateRSAPrivateKey()
@@ -474,7 +476,8 @@ class IssuanceAuthorizationTest: XCTestCase {
         txCode: code.txCode
       ),
       clientId: "wallet-dev",
-      transactionCode: "12345"
+      transactionCode: "12345",
+      clientAssertion: nil
     )
 
     let privateKey = try KeyController.generateECDHPrivateKey()
@@ -585,7 +588,8 @@ class IssuanceAuthorizationTest: XCTestCase {
         txCode: code.txCode
       ),
       clientId: "218232426",
-      transactionCode: "12345"
+      transactionCode: "12345",
+      clientAssertion: nil
     )
     
     let bindingKey: BindingKey = .jwk(

@@ -34,7 +34,7 @@ import JOSESwift
 
 public struct CredentialIssuerMetadata: Decodable, Equatable {
   public let credentialIssuerIdentifier: CredentialIssuerId
-  public let authorizationServers: [URL]
+  public let authorizationServers: [URL]?
   public let credentialEndpoint: CredentialIssuerEndpoint
   public let batchCredentialEndpoint: CredentialIssuerEndpoint?
   public let deferredCredentialEndpoint: CredentialIssuerEndpoint?
@@ -92,6 +92,20 @@ public struct CredentialIssuerMetadata: Decodable, Equatable {
     self.credentialIdentifiersSupported = credentialIdentifiersSupported
   }
   
+  public init(deferredCredentialEndpoint: CredentialIssuerEndpoint?) throws {
+    try self.init(
+      credentialIssuerIdentifier: .init(Constants.url),
+      authorizationServers: [],
+      credentialEndpoint: .init(string: Constants.url),
+      batchCredentialEndpoint: nil,
+      deferredCredentialEndpoint: deferredCredentialEndpoint,
+      notificationEndpoint: nil,
+      credentialConfigurationsSupported: [:],
+      signedMetadata: nil,
+      display: nil
+    )
+  }
+    
   // Implement a custom init(from decoder:) method to handle decoding.
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)

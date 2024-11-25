@@ -118,7 +118,7 @@ class IssuanceBatchRequestTest: XCTestCase {
       let authorizedRequest = await issuer.requestAccessToken(authorizationCode: authorizationCode)
       
       if case let .success(authorized) = authorizedRequest,
-         case let .noProofRequired(token, _, _) = authorized {
+         case let .noProofRequired(token, _, _, _) = authorized {
         XCTAssert(true, "Got access token: \(token)")
         XCTAssert(true, "Is no proof required")
         
@@ -167,7 +167,7 @@ class IssuanceBatchRequestTest: XCTestCase {
                 switch result {
                 case .deferred:
                   XCTAssert(false, "Unexpected deferred")
-                case .issued(_, let credential, _):
+                case .issued(let credential, _):
                   XCTAssert(true, "credential: \(credential)")
                   return
                 }
@@ -322,7 +322,7 @@ class IssuanceBatchRequestTest: XCTestCase {
               switch result {
               case .deferred:
                 XCTAssert(false, "Unexpected deferred")
-              case .issued(_, let credential, _):
+              case .issued(let credential, _):
                 XCTAssert(true, "credential: \(credential)")
                 return
               }
@@ -365,7 +365,7 @@ class IssuanceBatchRequestTest: XCTestCase {
               switch result {
               case .deferred:
                 XCTAssert(false, "Unexpected deferred")
-              case .issued(_, let credential, _):
+              case .issued(let credential, _):
                 XCTAssert(true, "credential: \(credential)")
                 return
               }

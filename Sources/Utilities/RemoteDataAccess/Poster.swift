@@ -60,7 +60,7 @@ public enum PostError: LocalizedError {
 
 public protocol PostingType {
   
-  var session: Networking { get set }
+    var session: NetworkingVCI { get set }
 
   /**
    Performs a POST request with the provided URLRequest.
@@ -85,13 +85,13 @@ public protocol PostingType {
 
 public struct Poster: PostingType {
   
-  public var session: Networking
+    public var session: NetworkingVCI
 
   /**
    Initializes a Poster instance.
    */
   public init(
-    session: Networking = URLSession.shared
+    session: NetworkingVCI = URLSession.shared
   ) {
     self.session = session
   }
@@ -106,7 +106,7 @@ public struct Poster: PostingType {
    */
   public func post<Response: Codable>(request: URLRequest) async -> Result<Response, PostError> {
     do {
-      let (data, response) = try await self.session.data(for: request)
+      let (data, response) = try await self.session.dataVCI(for: request)
       let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
       
       if statusCode >= 400 && statusCode < 500 {
@@ -145,7 +145,7 @@ public struct Poster: PostingType {
    */
   public func check(request: URLRequest) async -> Result<Bool, PostError> {
     do {
-      let (_, response) = try await self.session.data(for: request)
+      let (_, response) = try await self.session.dataVCI(for: request)
 
       return .success((response as? HTTPURLResponse)?.statusCode.isWithinRange(200...299) ?? false)
     } catch let error as NSError {

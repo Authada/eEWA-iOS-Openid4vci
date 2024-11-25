@@ -30,23 +30,31 @@
  */
 import Foundation
 
-extension URLSession: Networking {}
+extension URLSession: NetworkingVCI {
+    public func dataVCI(from url: URL) async throws -> (Data, URLResponse) {
+      try await data(from: url)
+    }
+    
+    public func dataVCI(for request: URLRequest) async throws -> (Data, URLResponse) {
+      try await data(for: request)
+    }
+}
 
-public protocol Networking {
-  func data(
+public protocol NetworkingVCI {
+  func dataVCI(
     from url: URL
   ) async throws -> (Data, URLResponse)
-  func data(
+  func dataVCI(
     for request: URLRequest
   ) async throws -> (Data, URLResponse)
 }
 
-public extension Networking {
-  func data(from url: URL) async throws -> (Data, URLResponse) {
-    try await data(from: url)
+public extension NetworkingVCI {
+  func dataVCI(from url: URL) async throws -> (Data, URLResponse) {
+    try await dataVCI(from: url)
   }
   
-  func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-    try await data(for: request)
+  func dataVCI(for request: URLRequest) async throws -> (Data, URLResponse) {
+    try await dataVCI(for: request)
   }
 }

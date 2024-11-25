@@ -33,15 +33,15 @@ import XCTest
 
 @testable import OpenID4VCI
 
-class NetworkingThrowingMock: Networking {
+class NetworkingThrowingMock: NetworkingVCI {
   
-  func data(
+  func dataVCI(
     from url: URL
   ) async throws -> (Data, URLResponse) {
     throw ValidationError.error(reason: "Should not call ThrowingMock")
   }
   
-  func data(
+  func dataVCI(
     for request: URLRequest
   ) async throws -> (Data, URLResponse) {
     throw ValidationError.error(reason: "Should not call ThrowingMock")

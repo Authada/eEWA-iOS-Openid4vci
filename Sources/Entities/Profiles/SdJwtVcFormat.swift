@@ -63,7 +63,7 @@ public extension SdJwtVcFormat {
     public let credentialDefinition: CredentialDefinition
     public let requestedCredentialResponseEncryption: RequestedCredentialResponseEncryption
     public let credentialIdentifier: CredentialIdentifier?
-    public let verifierKA : VerifierKA?
+    public let verifierPub : VerifierPub?
     
     enum CodingKeys: String, CodingKey {
       case proof
@@ -72,7 +72,7 @@ public extension SdJwtVcFormat {
       case credentialResponseEncryptionMethod
       case credentialDefinition
       case credentialIdentifier
-      case verifierKA = "verifier-ka"
+      case verifierPub = "verifier_pub"
     }
     
     public init(
@@ -84,7 +84,7 @@ public extension SdJwtVcFormat {
       credentialResponseEncryptionMethod: JOSEEncryptionMethod? = nil,
       credentialDefinition: CredentialDefinition,
       credentialIdentifier: CredentialIdentifier?,
-      verifierKA: VerifierKA?
+      verifierPub: VerifierPub?
     ) throws {
       self.proof = proof
       self.vct = vct
@@ -97,7 +97,7 @@ public extension SdJwtVcFormat {
         claims: credentialDefinition.claims
       )
       self.credentialIdentifier = credentialIdentifier
-      self.verifierKA = verifierKA
+      self.verifierPub = verifierPub
       
       self.requestedCredentialResponseEncryption = try .init(
         encryptionJwk: credentialEncryptionJwk,
@@ -126,7 +126,7 @@ public extension SdJwtVcFormat {
       
       try container.encode(credentialDefinition, forKey: .credentialDefinition)
         
-      try container.encode(verifierKA, forKey: .verifierKA)
+      try container.encode(verifierPub, forKey: .verifierPub)
     }
     
     public struct CredentialDefinition: Codable {
@@ -347,7 +347,7 @@ public extension SdJwtVcFormat {
       credentialIdentifier: CredentialIdentifier? = nil,
       claimSet: ClaimSet?,
       proof: Proof?,
-      verifierKA: VerifierKA?
+      verifierPub: VerifierPub?
     ) throws -> CredentialIssuanceRequest {
       try .single(
         .sdJwtVc(
@@ -363,7 +363,7 @@ public extension SdJwtVcFormat {
               claims: try claimSet?.validate(claims: self.claimList)
             ),
             credentialIdentifier: credentialIdentifier,
-            verifierKA: verifierKA
+            verifierPub: verifierPub
           )
         ), responseEncryptionSpec
       )

@@ -36,13 +36,13 @@ struct Wallet {
   let actingUser: ActingUser
   let bindingKey: BindingKey
   let dPoPConstructor: DPoPConstructorType?
-  let session: Networking
+  let session: NetworkingVCI
 
   init(
     actingUser: ActingUser,
     bindingKey: BindingKey,
     dPoPConstructor: DPoPConstructorType?,
-    session: Networking = Self.walletSession
+    session: NetworkingVCI = Self.walletSession
   ) {
     self.actingUser = actingUser
     self.bindingKey = bindingKey
@@ -50,7 +50,7 @@ struct Wallet {
     self.session = session
   }
 
-  static let walletSession: Networking = {
+  static let walletSession: NetworkingVCI = {
     /*let delegate = SelfSignedSessionDelegate()
     let configuration = URLSessionConfiguration.default
     return URLSession(
@@ -81,7 +81,7 @@ extension Wallet {
     
     switch issuerMetadata {
     case .success(let metaData):
-      if let authorizationServer = metaData?.authorizationServers.first,
+      if let authorizationServer = metaData?.authorizationServers?.first,
          let metaData {
           let resolver = AuthorizationServerMetadataResolver(
             oidcFetcher: Fetcher(session: self.session),
@@ -461,9 +461,10 @@ extension Wallet {
       case .success(let request):
         let authorizedRequest = await issuer.requestAccessToken(authorizationCode: request)
         if case let .success(authorized) = authorizedRequest,
-           case let .noProofRequired(token, _, _) = authorized {
+           case let .noProofRequired(token, _, _, _) = authorized {
           print("--> [AUTHORIZATION] Authorization code exchanged with access token : \(token.accessToken)")
           
+          let hasExpired = authorized.accessToken?.isExpired(issued: authorized.timeStamp!, at: Date().timeIntervalSinceReferenceDate)
           return authorized
         }
         
@@ -505,7 +506,7 @@ extension Wallet {
                 authorized: noProofRequiredState,
                 transactionId: transactionId
               )
-            case .issued(_, let credential, _):
+            case .issued(let credential, _):
               return credential
             }
           } else {
@@ -565,7 +566,7 @@ extension Wallet {
               authorized: authorized,
               transactionId: transactionId
             )
-          case .issued(_, let credential, _):
+          case .issued(let credential, _):
             return credential
           }
         } else {
@@ -595,7 +596,7 @@ extension Wallet {
     switch deferredRequestResponse {
     case .success(let response):
       switch response {
-      case .issued(_, let credential):
+      case .issued(let credential):
         return credential
       case .issuancePending(let transactionId):
         throw ValidationError.error(reason: "Credential not ready yet. Try after \(transactionId.interval ?? 0)")

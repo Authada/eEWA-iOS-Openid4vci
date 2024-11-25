@@ -47,4 +47,6 @@ public struct Constants {
     
   public static let CLIENT_ASSERTION_TYPE = "client_assertion_type"
   public static let CLIENT_ASSERTION = "client_assertion"
+
+  public static let url = "https://a.bc"
 }

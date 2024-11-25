@@ -15,14 +15,14 @@
  */
 
 //
-//  VerifierKA.swift
+//  VerifierPub.swift
 //
 
 import Foundation
 import JOSESwift
 
 // Grant, conforming to Codable.
-public struct VerifierKA: Codable {
+public struct VerifierPub: Codable {
     
     public let jwk: JWK
     
@@ -39,12 +39,10 @@ public struct VerifierKA: Codable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        
         if let verifierJwk = jwk as? RSAPublicKey {
-            try container.encode(verifierJwk, forKey: .jwk)
+            try verifierJwk.encode(to: encoder)
         } else if let verifierJwk = jwk as? ECPublicKey {
-            try container.encode(verifierJwk, forKey: .jwk)
+            try verifierJwk.encode(to: encoder)
         }
     }
 }

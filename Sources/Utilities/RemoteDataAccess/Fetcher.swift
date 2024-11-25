@@ -59,7 +59,7 @@ public enum FetchError: LocalizedError {
 }
 
 public protocol Fetching {
-  var session: Networking { get set }
+    var session: NetworkingVCI { get set }
 
   associatedtype Element: Decodable
 
@@ -77,13 +77,13 @@ public protocol Fetching {
 
 public struct Fetcher<Element: Decodable>: Fetching {
 
-  public var session: Networking
+    public var session: NetworkingVCI
 
   /**
    Initializes a Fetcher instance.
    */
   public init(
-    session: Networking = URLSession.shared
+    session: NetworkingVCI = URLSession.shared
   ) {
     self.session = session
   }
@@ -98,7 +98,7 @@ public struct Fetcher<Element: Decodable>: Fetching {
    */
   public func fetch(url: URL) async -> Result<Element, FetchError> {
     do {
-      let (data, response) = try await self.session.data(from: url)
+      let (data, response) = try await self.session.dataVCI(from: url)
 
       let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
       if !statusCode.isWithinRange(200...299) {
@@ -120,7 +120,7 @@ public struct Fetcher<Element: Decodable>: Fetching {
 
   public func fetchString(url: URL) async throws -> Result<String, FetchError> {
     do {
-      let (data, response) = try await self.session.data(from: url)
+      let (data, response) = try await self.session.dataVCI(from: url)
 
       let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
       if !statusCode.isWithinRange(200...299) {

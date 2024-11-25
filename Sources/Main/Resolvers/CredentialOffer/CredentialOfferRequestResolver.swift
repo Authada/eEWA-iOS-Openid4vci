@@ -101,7 +101,7 @@ public actor CredentialOfferRequestResolver {
           return .failure(ValidationError.error(reason: "Invalid credential metadata"))
         }
         
-        guard let authorizationServer = credentialIssuerMetadata.authorizationServers.first,
+        guard let authorizationServer = credentialIssuerMetadata.authorizationServers?.first,
               let authorizationServerMetadata = try? await authorizationServerMetadataResolver.resolve(url: authorizationServer).get() else {
           return .failure(ValidationError.error(reason: "Invalid authorization metadata"))
         }
@@ -122,7 +122,7 @@ public actor CredentialOfferRequestResolver {
             return .failure(ValidationError.error(reason: "Invalid credential metadata"))
           }
           
-          guard let authorizationServer = credentialIssuerMetadata.authorizationServers.first,
+          guard let authorizationServer = credentialIssuerMetadata.authorizationServers?.first,
                   let authorizationServerMetadata = try? await authorizationServerMetadataResolver.resolve(url: authorizationServer).get() else {
             return .failure(ValidationError.error(reason: "Invalid authorization metadata"))
           }

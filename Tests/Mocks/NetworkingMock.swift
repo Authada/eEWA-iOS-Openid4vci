@@ -33,7 +33,7 @@ import XCTest
 
 @testable import OpenID4VCI
 
-class NetworkingMock: Networking {
+class NetworkingMock: NetworkingVCI {
   
   let path: String
   let `extension`: String
@@ -49,7 +49,7 @@ class NetworkingMock: Networking {
     self.statusCode = statusCode
   }
   
-  func data(
+  func dataVCI(
     from url: URL
   ) async throws -> (Data, URLResponse) {
     let path = Bundle.module.path(forResource: self.path, ofType: self.extension)
@@ -65,9 +65,9 @@ class NetworkingMock: Networking {
     return try (result.get(), response!)
   }
   
-  func data(
+  func dataVCI(
     for request: URLRequest
   ) async throws -> (Data, URLResponse) {
-    return try await data(from: URL(string: "https://www.example.com")!)
+    return try await dataVCI(from: URL(string: "https://www.example.com")!)
   }
 }

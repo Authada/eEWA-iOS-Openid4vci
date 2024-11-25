@@ -78,7 +78,7 @@ class CredentialIssuerIdTest: XCTestCase {
       
       return
     }
-    
+    XCTExpectFailure()
     XCTAssert(false)
   }
   

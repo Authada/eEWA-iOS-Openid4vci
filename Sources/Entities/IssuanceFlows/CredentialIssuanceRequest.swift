@@ -99,7 +99,7 @@ public extension SingleCredential {
                   let dictionary = [
                     "credential_identifier": identifier,
                     "proof": credential.proof != nil ? (try? credential.proof.toDictionary()) : nil,
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
                   
@@ -109,7 +109,7 @@ public extension SingleCredential {
                     "doctype": credential.docType,
                     "claims": credential.claimSet?.toDictionary(),
                     "proof": credential.proof != nil ? (try? credential.proof.toDictionary()) : nil,
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
               }
@@ -128,7 +128,7 @@ public extension SingleCredential {
                         "alg": responseEncryptionAlg.name,
                         "enc": responseEncryptionMethod.name
                     ],
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
                   
@@ -143,7 +143,7 @@ public extension SingleCredential {
                         "enc": responseEncryptionMethod.name
                     ],
                     "claims": credential.claimSet?.toDictionary(),
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
               }
@@ -155,7 +155,7 @@ public extension SingleCredential {
                   let dictionary = [
                     "proof": credential.proof != nil ? (try? credential.proof.toDictionary()) : nil,
                     "credential_identifier": identifier,
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
                   
@@ -165,7 +165,7 @@ public extension SingleCredential {
                     "proof": credential.proof != nil ? (try? credential.proof.toDictionary()) : nil,
                     "format": SdJwtVcFormat.FORMAT,
                     "claims": credential.credentialDefinition.claims?.toDictionary(),
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
               }
@@ -184,7 +184,7 @@ public extension SingleCredential {
                         "alg": responseEncryptionAlg.name,
                         "enc": responseEncryptionMethod.name
                     ],
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
                   
@@ -199,7 +199,7 @@ public extension SingleCredential {
                         "enc": responseEncryptionMethod.name
                     ],
                     "claims": credential.credentialDefinition.claims?.toDictionary(),
-                    "verifier-ka": credential.verifierKA != nil ? (try? credential.verifierKA.toDictionary()) : nil,
+                    "verifier_pub": credential.verifierPub != nil ? (try? credential.verifierPub.toDictionary()) : nil,
                   ] as [String : Any?]
                   return JSON(dictionary.filter { $0.value != nil })
               }

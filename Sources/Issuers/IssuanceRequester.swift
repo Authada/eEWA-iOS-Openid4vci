@@ -253,7 +253,7 @@ public actor IssuanceRequester: IssuanceRequesterType {
       
       let encodedRequest: [JSON] = try request
         .map { try $0.toDictionary() }
-
+      
       let merged = authorizationHeader.merging(["credential_requests": encodedRequest]) { (_, new) in new }
       
       let response: BatchIssuanceSuccessResponse = try await service.formPost(
@@ -293,6 +293,16 @@ public actor IssuanceRequester: IssuanceRequesterType {
         body: encodedRequest
       )
       return .success(response)
+      
+    } catch PostError.response(let response) {
+      
+      let issuanceError = response.toIssuanceError()
+      
+      if case .deferredCredentialIssuancePending = issuanceError {
+        return .success(.issuancePending(transactionId: transactionId))
+      }
+      
+      return .failure(issuanceError)
       
     } catch PostError.cannotParse(let string) {
       
@@ -401,7 +411,7 @@ private extension SingleIssuanceSuccessResponse {
   func toSingleIssuanceResponse() throws -> CredentialIssuanceResponse {
     if let credential = credential {
       return CredentialIssuanceResponse(
-        credentialResponses: [.issued(format: format ?? "", credential: credential, notificationId: nil)],
+        credentialResponses: [.issued(credential: credential, notificationId: nil)],
         cNonce: CNonce(value: cNonce, expiresInSeconds: cNonceExpiresInSeconds)
       )
     } else if let transactionId = transactionId {
@@ -420,9 +430,9 @@ private extension BatchIssuanceSuccessResponse {
     func mapResults() throws -> [CredentialIssuanceResponse.Result] {
       return try credentialResponses.map { response in
         if let transactionId = response.transactionId {
-          return CredentialIssuanceResponse.Result.deferred(transactionId: try .init(value: transactionId))
+          return .deferred(transactionId: try .init(value: transactionId))
         } else if let credential = response.credential {
-          return CredentialIssuanceResponse.Result.issued(format: nil, credential: credential, notificationId: nil)
+          return .issued(credential: credential, notificationId: nil)
         } else {
           throw CredentialIssuanceError.responseUnparsable("Got success response for issuance but response misses 'transaction_id' and 'certificate' parameters")
         }

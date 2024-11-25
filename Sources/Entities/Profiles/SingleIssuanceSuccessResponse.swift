@@ -31,7 +31,6 @@
 import Foundation
 
 public struct SingleIssuanceSuccessResponse: Codable {
-  public let format: String?
   public let credential: String?
   public let transactionId: String?
   public let notificationId: String?
@@ -39,7 +38,6 @@ public struct SingleIssuanceSuccessResponse: Codable {
   public let cNonceExpiresInSeconds: Int?
   
   enum CodingKeys: String, CodingKey {
-    case format
     case credential
     case transactionId = "transaction_id"
     case notificationId = "notification_id"
@@ -48,14 +46,12 @@ public struct SingleIssuanceSuccessResponse: Codable {
   }
   
   public init(
-    format: String?,
     credential: String?,
     transactionId: String?,
     notificationId: String?,
     cNonce: String?,
     cNonceExpiresInSeconds: Int?
   ) {
-    self.format = format
     self.credential = credential
     self.transactionId = transactionId
     self.notificationId = notificationId
@@ -74,7 +70,7 @@ public extension SingleIssuanceSuccessResponse {
       )
     } else if let credential = credential {
       return CredentialIssuanceResponse(
-        credentialResponses: [.issued(format: format ?? "", credential: credential, notificationId: nil)],
+        credentialResponses: [.issued(credential: credential, notificationId: nil)],
         cNonce: CNonce(value: cNonce, expiresInSeconds: cNonceExpiresInSeconds)
       )
     } else {

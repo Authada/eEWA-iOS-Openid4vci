@@ -65,7 +65,7 @@ public extension CredentialSupported {
     requester: IssuanceRequesterType,
     claimSet: ClaimSet? = nil,
     proof: Proof? = nil,
-    verifierKA: VerifierKA?,
+    verifierPub: VerifierPub?,
     credentialIdentifier: CredentialIdentifier? = nil,
     responseEncryptionSpecProvider: (_ issuerResponseEncryptionMetadata: CredentialResponseEncryption) -> IssuanceResponseEncryptionSpec?
   ) throws -> CredentialIssuanceRequest {
@@ -95,7 +95,7 @@ public extension CredentialSupported {
         responseEncryptionSpec: issuerEncryption.notRequired ? nil : responseEncryptionSpec,
         claimSet: claimSet,
         proof: proof,
-        verifierKA: verifierKA
+        verifierPub: verifierPub
       )
 
     case .sdJwtVc(let credentialConfiguration):
@@ -123,7 +123,7 @@ public extension CredentialSupported {
         responseEncryptionSpec: issuerEncryption.notRequired ? nil : responseEncryptionSpec,
         claimSet: claimSet,
         proof: proof,
-        verifierKA: verifierKA
+        verifierPub: verifierPub
       )
     default:
       throw ValidationError.error(reason: "Unsupported profile for issuance request")

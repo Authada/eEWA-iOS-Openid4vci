@@ -50,25 +50,29 @@ public enum TokenType: String, Codable {
   }
 }
 
-public struct IssuanceAccessToken: Codable {
+public struct IssuanceAccessToken: Codable, CanExpire {
+  public var expiresIn: TimeInterval?
+    
   public let accessToken: String
   public let tokenType: TokenType?
   
   public init(
     accessToken: String,
-    tokenType: TokenType?
+    tokenType: TokenType?,
+    expiresIn: TimeInterval = .zero
   ) throws {
     guard !accessToken.isEmpty else {
       throw ValidationError.error(reason: "Access token cannot be empty")
     }
     self.accessToken = accessToken
     self.tokenType = tokenType
+    self.expiresIn = expiresIn
   }
 }
 
 public extension IssuanceAccessToken {
   var authorizationHeader: [String: String] {
-    ["Authorization": "BEARER \(accessToken)"]
+    ["Authorization": "\(TokenType.bearer.rawValue) \(accessToken)"]
   }
   
   func dPoPOrBearerAuthorizationHeader(
@@ -76,13 +80,13 @@ public extension IssuanceAccessToken {
     endpoint: URL?
   ) throws -> [String: String] {
     if tokenType == TokenType.bearer {
-      return ["Authorization": "BEARER \(accessToken)"]
+      return ["Authorization": "\(TokenType.bearer.rawValue) \(accessToken)"]
     } else if let dpopConstructor, tokenType == TokenType.dpop, let endpoint {
       return [
-        "Authorization": "DPoP \(accessToken)",
-        "DPoP": try dpopConstructor.jwt(endpoint: endpoint, accessToken: accessToken)
+        "Authorization": "\(TokenType.dpop.rawValue) \(accessToken)",
+        TokenType.dpop.rawValue: try dpopConstructor.jwt(endpoint: endpoint, accessToken: accessToken)
       ]
     }
-    return ["Authorization": "BEARER \(accessToken)"]
+    return ["Authorization": "\(TokenType.bearer.rawValue) \(accessToken)"]
   }
 }

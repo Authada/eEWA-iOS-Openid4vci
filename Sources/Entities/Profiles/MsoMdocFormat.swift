@@ -61,7 +61,7 @@ public extension MsoMdocFormat {
     public let claimSet: ClaimSet?
     public let credentialIdentifier: CredentialIdentifier?
     public let requestedCredentialResponseEncryption: RequestedCredentialResponseEncryption
-    public let verifierKA : VerifierKA?
+    public let verifierPub : VerifierPub?
     
     enum CodingKeys: String, CodingKey {
       case doctype
@@ -71,7 +71,7 @@ public extension MsoMdocFormat {
       case credentialResponseEncryptionMethod
       case claimSet
       case credentialIdentifier
-      case verifierKA = "verifier-ka"
+      case verifierPub = "verifier_pub"
     }
     
     public init(
@@ -83,7 +83,7 @@ public extension MsoMdocFormat {
       credentialResponseEncryptionMethod: JOSEEncryptionMethod? = nil,
       claimSet: ClaimSet? = nil,
       credentialIdentifier: CredentialIdentifier?,
-      verifierKA: VerifierKA?
+      verifierPub: VerifierPub?
     ) throws {
       self.docType = docType
       self.proof = proof
@@ -93,7 +93,7 @@ public extension MsoMdocFormat {
       self.credentialResponseEncryptionMethod = credentialResponseEncryptionMethod
       self.claimSet = claimSet
       self.credentialIdentifier = credentialIdentifier
-      self.verifierKA = verifierKA
+      self.verifierPub = verifierPub
       
       self.requestedCredentialResponseEncryption = try .init(
         encryptionJwk: credentialEncryptionJwk,
@@ -121,7 +121,7 @@ public extension MsoMdocFormat {
       try container.encode(credentialResponseEncryptionMethod, forKey: .credentialResponseEncryptionMethod)
       try container.encode(claimSet, forKey: .claimSet)
       try container.encode(credentialIdentifier, forKey: .credentialIdentifier)
-      try container.encode(verifierKA, forKey: .verifierKA)
+      try container.encode(verifierPub, forKey: .verifierPub)
     }
   }
   
@@ -362,7 +362,7 @@ public extension MsoMdocFormat {
       credentialIdentifier: CredentialIdentifier? = nil,
       claimSet: ClaimSet?,
       proof: Proof?,
-      verifierKA: VerifierKA?
+      verifierPub: VerifierPub?
     ) throws -> CredentialIssuanceRequest {
       try .single(
         .msoMdoc(
@@ -375,7 +375,7 @@ public extension MsoMdocFormat {
             credentialResponseEncryptionMethod: responseEncryptionSpec?.encryptionMethod,
             claimSet: try claimSet?.validate(claims: self.claimList), 
             credentialIdentifier: credentialIdentifier,
-            verifierKA: verifierKA
+            verifierPub: verifierPub
           )
         ), responseEncryptionSpec
       )

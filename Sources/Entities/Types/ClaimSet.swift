@@ -106,16 +106,35 @@ public enum ClaimSet: Codable {
         return nil
       }
       
-      if !claims.isEmpty {
-        for (claimName, _) in claimSetClaims {
-          if !claims.contains(where: { $0 == claimName}) {
-            throw ValidationError.error(reason: "Requested claim name \(claimName) is not supported by issuer")
-          }
+        if !claims.isEmpty {
+            for (claimName, _) in claimSetClaims {
+                //Test allowed claims with support of SD-JWT tree structure root elements
+                var testClaimName :String = claimName
+                var found = false
+
+                repeat {
+                    if claims.contains(where: { $0 == testClaimName}) {
+                        found = true
+                    }
+                    if (!found && testClaimName.contains(".")) {
+                        let components = testClaimName.components(separatedBy: ".")
+                        var parentClaimName = components[0]
+                        for i in 1 ..< (components.count-1) {
+                            parentClaimName += "."
+                            parentClaimName += components[i]
+                        }
+                        testClaimName = parentClaimName
+                    }
+                    else if (!found) {
+                        throw ValidationError.error(reason: "Requested claim name \(claimName) is not supported by issuer")
+                    }
+                    
+                } while (!found)
+            }
+            return .sdJwtVc(claimSet)
+        } else {
+            return nil
         }
-        return .sdJwtVc(claimSet)
-      } else {
-        return nil
-      }
       
     case .generic(let claimSet):
       guard let c = claimSet?.claims else {
